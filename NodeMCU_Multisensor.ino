@@ -1,13 +1,8 @@
 #include <ESP8266WiFi.h>
-
 #include <WiFiUdp.h>
-
 #include <ArduinoJson.h>
-
 #include <PubSubClient.h>
-
 #include <Adafruit_Sensor.h>
-
 #include <DHT.h>
 
 
@@ -55,8 +50,8 @@ void setup() {
   pinMode(LDRPIN, INPUT);
   
   setup_wifi();
-  
   client.setServer(mqtt_broker_ip, mqtt_port);
+
   Serial.println("Setup complete");
 }
 
@@ -79,7 +74,6 @@ void setup_wifi() {
   Serial.println(WiFi.localIP());
 }
 
-// the loop function runs over and over again forever
 void loop() {
   if (!client.connected()) {
     reconnect();
@@ -89,6 +83,8 @@ void loop() {
   update_dht();
   update_pir();
   update_ldr();
+
+  // Don't update the time every loop; precision isn't that important
   if(count == 10) {
     get_nist_time(); 
     count = 0;
